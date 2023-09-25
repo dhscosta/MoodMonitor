@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'screens/cadastro_screen.dart';
-import 'screens/sobre_screen.dart';
+import 'screens/Home.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(DiaryApp());
 }
 
-class MyApp extends StatelessWidget {
+class DiaryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(),
+      debugShowCheckedModeBanner: false,
+      home: Home()
     );
+    // This trailing comma makes auto-formatting nicer for build methods.
+
   }
 }
