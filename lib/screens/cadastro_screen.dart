@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Home.dart';
 import 'sobre_screen.dart';
 
 class LoginPage extends StatelessWidget {
@@ -10,6 +11,7 @@ class LoginPage extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -37,7 +39,7 @@ class LoginPage extends StatelessWidget {
                 if (isAuthenticated) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SobreScreen()),
+                    MaterialPageRoute(builder: (context) => Home()),
                   );
                 } else {
                   // Essa parte será pra quando o login for de fato implementado
@@ -55,8 +57,18 @@ class LoginPage extends StatelessWidget {
               },
               child: Text('Cadastre-se'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SobreScreen()),
+                );
+              },
+              child: Text('Sobre'),
+            ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -71,6 +83,7 @@ class CadastroScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -143,6 +156,7 @@ class CadastroScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
