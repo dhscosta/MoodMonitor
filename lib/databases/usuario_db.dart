@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
-class SQLHelper {
+class SQLUsuarios {
   static Future<void> criaTabela(sql.Database database) async {
     await database.execute("""CREATE TABLE usuarios(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         nome TEXT,
         senha TEXT,
         celEmail TEXT,
@@ -25,7 +26,7 @@ class SQLHelper {
   }
 
   static Future<int> adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async {
-    final db = await SQLHelper.db();
+    final db = await SQLUsuarios.db();
 
     final dados = {'nome': nome, 'senha': senha, 'celEmail': celEmail, 'dataNascimento': dataNascimento, 'genero': genero};
     final id = await db.insert('usuarios', dados,
@@ -34,18 +35,23 @@ class SQLHelper {
   }
 
   static Future<List<Map<String, dynamic>>> listarUsuarios() async {
-    final db = await SQLHelper.db();
+    final db = await SQLUsuarios.db();
     return db.query('usuarios', orderBy: "id");
   }
 
-  static Future<List<Map<String, dynamic>>> recuperaUsuario(String email, String senha) async {
-    final db = await SQLHelper.db();
+  static Future<List<Map<String, dynamic>>> validaUsuario(String email, String senha) async {
+    final db = await SQLUsuarios.db();
     return db.query('usuarios', where: "celEmail = ? AND senha = ?", whereArgs: [email, senha], limit: 1);
+  }
+
+  static Future<List<Map<String, dynamic>>> recuperaUsuario(int id) async {
+    final db = await SQLUsuarios.db();
+    return db.query('usuarios', where: "id = ?", whereArgs: [id], limit: 1);
   }
 
   static Future<int> atualizarUsuario(
       int id, String nome, String senha, String celEmail, String dataNascimento, String? genero) async {
-    final db = await SQLHelper.db();
+    final db = await SQLUsuarios.db();
 
     final dados = {
       'nome': nome,
@@ -62,7 +68,7 @@ class SQLHelper {
   }
 
   static Future<void> deletarUsuario(int id) async {
-    final db = await SQLHelper.db();
+    final db = await SQLUsuarios.db();
     try {
       await db.delete("usuarios", where: "id = ?", whereArgs: [id]);
     } catch (err) {

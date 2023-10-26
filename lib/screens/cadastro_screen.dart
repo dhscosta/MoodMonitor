@@ -183,9 +183,9 @@ class CadastroScreen extends StatelessWidget {
 }
 
 Future _adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async{
-  await SQLHelper.adicionarUsuario(nome, senha, celEmail, dataNascimento, genero);
+  await SQLUsuarios.adicionarUsuario(nome, senha, celEmail, dataNascimento, genero);
 }
 
-Future _recuperaUsuario(String senha, String celEmail) async{
-  return await SQLHelper.recuperaUsuario(celEmail, senha);
+Future _recuperaUsuario(int id) async{
+  return await SQLUsuarios.recuperaUsuario(id);
 }
