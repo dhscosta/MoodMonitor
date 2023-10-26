@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'sobre_screen.dart';
+import 'package:moodmonitor/databases/usuario_db.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -75,6 +76,11 @@ class LoginPage extends StatelessWidget {
 }
 
 class CadastroScreen extends StatelessWidget {
+  String nome = "";
+  String email = "";
+  String senha = "";
+  String dataNascimento = "";
+  String? genero = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +99,9 @@ class CadastroScreen extends StatelessWidget {
                 labelText: 'Nome',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                nome = value;
+              },
             ),
             SizedBox(height: 16.0),
             //email
@@ -101,6 +110,9 @@ class CadastroScreen extends StatelessWidget {
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                email = value;
+              },
             ),
             SizedBox(height: 16.0),
             //email
@@ -110,6 +122,9 @@ class CadastroScreen extends StatelessWidget {
                 labelText: 'Senha',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                senha = value;
+              },
             ),
             SizedBox(height: 16.0),
             //data de nascimento
@@ -121,6 +136,9 @@ class CadastroScreen extends StatelessWidget {
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                dataNascimento = value;
+              },
             ),
             SizedBox(height: 16.0),
             //escolha de genero
@@ -130,8 +148,8 @@ class CadastroScreen extends StatelessWidget {
             ),
             DropdownButton<String>(
               value: null, // Valor inicial (implementar depois)
-              onChanged: (String? newValue) {
-                // Funcionalidade para quando selecionar (implementar depois)
+              onChanged: (value) {
+                genero = value;// Funcionalidade para quando selecionar (implementar depois)
               },
               items: <String>[
                 'Masculino',
@@ -147,6 +165,8 @@ class CadastroScreen extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
+                _adicionarUsuario(nome, senha, email, dataNascimento, genero);
+                print(nome + " " + senha);
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage())
@@ -160,4 +180,12 @@ class CadastroScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future _adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async{
+  await SQLHelper.adicionarUsuario(nome, senha, celEmail, dataNascimento, genero);
+}
+
+Future _recuperaUsuario(String senha, String celEmail) async{
+  return await SQLHelper.recuperaUsuario(celEmail, senha);
 }
