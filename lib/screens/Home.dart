@@ -3,6 +3,7 @@ import 'cadastro_screen.dart';
 import 'calendario.dart';
 import 'profile.dart';
 import 'diary_screen.dart';
+import 'package:moodmonitor/databases/usuario_db.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -10,6 +11,8 @@ class Home extends StatefulWidget{
 }
 
 class _Home extends State<Home> {
+  int id = 0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -118,6 +121,8 @@ class _Home extends State<Home> {
                       Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Profile()));
+
+                      //_recuperaUsuario(id);
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue, // Cor de fundo do botão
@@ -147,3 +152,7 @@ class _Home extends State<Home> {
     );
   }
 }
+
+/*Future _recuperaUsuario(int id) async{
+  return await SQLUsuarios.recuperaUsuario(id);
+}*/

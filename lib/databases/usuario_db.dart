@@ -36,7 +36,7 @@ class SQLUsuarios {
 
   static Future<List<Map<String, dynamic>>> listarUsuarios() async {
     final db = await SQLUsuarios.db();
-    return db.query('usuarios', orderBy: "id");
+    return db.query('usuarios', orderBy: "id DESC", limit: 1);
   }
 
   static Future<List<Map<String, dynamic>>> validaUsuario(String email, String senha) async {

@@ -3,7 +3,15 @@ import 'Home.dart';
 import 'sobre_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 
+/*class _LoginPageState extends StatefulWidget {
+  @override
+  LoginPage createState() => LoginPage();
+}*/
+
 class LoginPage extends StatelessWidget {
+  String senha = "";
+  String email = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +30,9 @@ class LoginPage extends StatelessWidget {
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                email = value;
+              },
             ),
             SizedBox(height: 16.0),
             //senha
@@ -31,20 +42,39 @@ class LoginPage extends StatelessWidget {
                 labelText: 'Senha',
                 border: OutlineInputBorder(),
               ),
+              onChanged: (value){
+                senha = value;
+              },
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-                bool isAuthenticated = true; // Aqui será substituido quando o login for implementado
+              onPressed: () async {
+                //_validarUsuario(email, senha);
+                final usuarios = await SQLUsuarios.validaUsuario(email, senha);
 
-                if (isAuthenticated) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
+                if(usuarios.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('ERRO!'),
+                        content: Text('Nao foi possivel fazer o login.'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   );
-                } else {
-                  // Essa parte será pra quando o login for de fato implementado
                 }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
 
               },
               child: Text('Entrar'),
@@ -186,6 +216,55 @@ Future _adicionarUsuario(String nome, String senha, String celEmail, String data
   await SQLUsuarios.adicionarUsuario(nome, senha, celEmail, dataNascimento, genero);
 }
 
-Future _recuperaUsuario(int id) async{
-  return await SQLUsuarios.recuperaUsuario(id);
+//Future _validarUsuario(String email, String senha) async {
+  //final usuarios = await SQLUsuarios.validaUsuario(email, senha);
+  //await SQLUsuarios.validaUsuario(email, senha);
+
+  /*if(usuarios.isEmpty) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('ERRO!'),
+          content: Text('Nao foi possivel fazer o login.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    //print('Erro ao fazer o login!');
+  }*/
+  /*else {
+    print('DEU CERTO');
+  }*/
+//}
+
+Future _validarUsuario(String email, String senha) async {
+  await SQLUsuarios.validaUsuario(email, senha);
 }
+
+/*Future _validarUsuario(String email, String senha) async {
+  //String? _errorMessage;
+  //bool teste = false;
+  List dados = await SQLUsuarios.validaUsuario(email, senha);
+  //await SQLUsuarios.validaUsuario(email, senha);
+  if(dados[0] != null && dados[1] != null) {
+    //teste = true;
+    print("Login bem sucedido!");
+  }
+  else if(dados[0] == null && dados[1] == null) {
+    print("Erro ao fazer o login!");
+  }
+
+  //return teste;
+}*/
+
+/*Future _recuperaUsuario(int id) async{
+  return await SQLUsuarios.recuperaUsuario(id);
+}*/
