@@ -1,72 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:moodmonitor/databases/usuario_db.dart';
 
+class UserProfileEditScreen extends StatefulWidget {
+   int id;
 
-class EditProfileForm extends StatefulWidget {
+  UserProfileEditScreen({required this.id});
+
   @override
-  _EditProfileFormState createState() => _EditProfileFormState();
+  _UserProfileEditScreenState createState() => _UserProfileEditScreenState();
 }
 
-class _EditProfileFormState extends State<EditProfileForm> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
+class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _birthController = TextEditingController();
+
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        TextFormField(
-          controller: _nameController,
-          decoration: InputDecoration(labelText: 'Nome'),
-        ),
-        SizedBox(height: 16.0),
-        TextFormField(
-          controller: _emailController,
-          decoration: InputDecoration(labelText: 'E-mail'),
-        ),
-        SizedBox(height: 16.0),
-        ElevatedButton(
-          onPressed: () {
-            // Salvar as alterações do perfil aqui
-            final name = _nameController.text;
-            final email = _emailController.text;
-
-            // Exemplo de exibição das informações atualizadas
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text('Perfil Atualizado'),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text('Nome: $name'),
-                      Text('E-mail: $email'),
-                    ],
-                  ),
-                  actions: <Widget>[
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Fechar'),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          child: Text('Salvar Perfil'),
-        ),
-      ],
-    );
+  void initState() {
+    super.initState();
+    SQLUsuarios.recuperaUsuario(widget.id);
   }
 
+  Future<void> updateUserProfile() async {
+    final nome = _nameController.text;
+    final celEmail = _emailController.text;
+    final senha = _passwordController.text;
+    final dataNascimento = _birthController.text;
+
+
+    await SQLUsuarios.atualizarUsuario(widget.id, nome, senha, celEmail, dataNascimento, null);
+
+    Navigator.pop(context);
+  }
   @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Editar Perfil'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(labelText: 'Nome'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Senha'),
+            ),
+            TextField(
+              controller: _birthController,
+              decoration: InputDecoration(labelText: 'Data de Nascimento'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: updateUserProfile,
+              child: Text('Salvar Alterações'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

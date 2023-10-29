@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 import 'UsuarioAtual.dart';
+import 'editprofile.dart';
 
 class Profile extends StatefulWidget {
+  int id;
+
+  Profile({required this.id});
+
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -20,6 +25,7 @@ class _ProfileState extends State<Profile> {
           child: FutureBuilder(
             future: _recuperaUltimoUsuario(),
             builder: (context, snapshot) {
+              
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               }
@@ -29,8 +35,9 @@ class _ProfileState extends State<Profile> {
               else {
                 final user = snapshot.data;
 
-// Accessing userId from the Singleton class
+                // Accessing userId from the Singleton class
                 int? userId = UsuarioAtual().userId;
+              
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +53,10 @@ class _ProfileState extends State<Profile> {
                     ),
                     SizedBox(height: 20.0),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserProfileEditScreen(widget.id)));
+                      },
                       child: Text('Editar Perfil'),
                     ),
                     SizedBox(height: 20.0),

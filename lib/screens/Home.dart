@@ -6,13 +6,15 @@ import 'diary_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 
 class Home extends StatefulWidget{
+  int? id;
+
+  Home({this.id});
+
   @override
   _Home createState() => _Home();
 }
 
 class _Home extends State<Home> {
-  int id = 0;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -120,7 +122,7 @@ class _Home extends State<Home> {
                     onPressed:(){
                       Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Profile()));
+                      MaterialPageRoute(builder: (context) => Profile(widget.id)));
 
                       //_recuperaUsuario(id);
                     },

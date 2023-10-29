@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'sobre_screen.dart';
@@ -52,7 +53,7 @@ class LoginPage extends StatelessWidget {
                 onPressed: () async {
                   //_validarUsuario(email, senha);
                   final usuarios = await SQLUsuarios.validaUsuario(email, senha);
-
+                  final id = usuarios[0]['id'];
                   if(usuarios.isEmpty) {
                     showDialog(
                       context: context,
@@ -75,7 +76,7 @@ class LoginPage extends StatelessWidget {
                   else {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                      MaterialPageRoute(builder: (context) => Home(id)),
                     );
                   }
                 },
