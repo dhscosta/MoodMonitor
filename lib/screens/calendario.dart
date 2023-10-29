@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'DetalhesDia.dart';
+import 'Home.dart';
+import 'profile.dart';
+import 'diary_screen.dart';
 
 class TableScreen extends StatefulWidget {
   @override
@@ -16,8 +19,8 @@ class _TableScreenState extends State<TableScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Calendário'),
-          centerTitle: true,
+        title: Text('Calendário'),
+        centerTitle: true,
       ),
       body: TableCalendar(
         firstDay: DateTime.utc(2010, 10, 16),
@@ -38,10 +41,8 @@ class _TableScreenState extends State<TableScreen> {
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DetalhesDia())
-              );
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DetalhesDia()));
             });
           }
         },
@@ -59,27 +60,56 @@ class _TableScreenState extends State<TableScreen> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-          unselectedItemColor: Colors.white,
-          selectedItemColor: Colors.yellow,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Início",
-                backgroundColor: Colors.blue),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Perfil",
-                backgroundColor: Colors.blue),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance),
-                label:"Saldo",
-                backgroundColor: Colors.blue),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: "Mapa",
-                backgroundColor: Colors.blue),
-          ],
-        ),
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.yellow,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Início",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Perfil",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions),
+              label: "Mapa",
+              backgroundColor: Colors.blue),
+        ],//a
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+              break;
+            case 1:
+              // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen()),
+              );
+              break;
+          }
+        },
+      ),
     );
   }
 }

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:moodmonitor/databases/avaliacoes_db.dart';
+import 'Home.dart';
+import 'diary_screen.dart';
+import 'calendario.dart';
+import 'profile.dart';
 
 class DiaryScreen extends StatefulWidget {
   @override
@@ -19,6 +24,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   void _saveDiaryEntry() {
     print("Categoria: $selectedCategory");
     print("Diário: $diaryEntry");
+   // adicionarAvaliacao(selectedCategory,diaryEntry,  );
   }
 
   @override
@@ -43,6 +49,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 buildCategoryButton("Feliz", "😊"),
+
                 buildCategoryButton("Relaxado", "😌"),
                 buildCategoryButton("Indiferente", "😐"),
               ],
@@ -83,11 +90,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
         ),
       ),
       ),
+
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _indiceAtual,
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        //onTap: onTabTapped,
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -98,16 +104,46 @@ class _DiaryScreenState extends State<DiaryScreen> {
               label: "Perfil",
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance),
-              label:"Saldo",
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(Icons.map),
+              icon: Icon(Icons.emoji_emotions),
               label: "Mapa",
               backgroundColor: Colors.blue),
         ],
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen()),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen()),
+              );
+              break;
+          }
+        },
       ),
     );
+
   }
 
   Widget buildCategoryButton(String category, String emoji) {
