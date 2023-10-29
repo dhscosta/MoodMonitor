@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
+import 'UsuarioAtual.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -27,6 +28,9 @@ class _ProfileState extends State<Profile> {
               }
               else {
                 final user = snapshot.data;
+
+// Accessing userId from the Singleton class
+                int? userId = UsuarioAtual().userId;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -86,4 +90,3 @@ class _ProfileState extends State<Profile> {
     return null;
   }
 }
-
