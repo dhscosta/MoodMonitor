@@ -18,6 +18,8 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
     var  name ;
+    var  email;
+    var  dataNascimento;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _ProfileState extends State<Profile> {
                 return CircularProgressIndicator();
               }
               else if (snapshot.error != null) {
-                return Text('Ocorreu um erro!');
+                return Text('Usuário não logado');
               }
               else {
                // final user =  await SQLUsuarios.recuperaUsuario(widget.id);
@@ -54,6 +56,14 @@ class _ProfileState extends State<Profile> {
                     SizedBox(height: 10.0),
                     Text(
                       name ?? "Nome do Usuário",
+                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      email ?? "Email do usuário",
+                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      dataNascimento ?? "Data de nascimento do Usuário",
                       style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20.0),
@@ -152,7 +162,11 @@ class _ProfileState extends State<Profile> {
     {
       final user =  await SQLUsuarios.recuperaUsuario(widget.id);
       name=   user[0]['nome'];
+      email = user[0]['celEmail'];
+      dataNascimento = user[0]['dataNascimento'];
     }
+
+
 
 
 }
