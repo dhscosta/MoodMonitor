@@ -6,7 +6,7 @@ import 'editprofile.dart';
 class Profile extends StatefulWidget {
   int id;
 
-  Profile({required this.id});
+  Profile(this.id);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
           child: FutureBuilder(
             future: _recuperaUltimoUsuario(),
             builder: (context, snapshot) {
-              
+
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               }
@@ -35,9 +35,6 @@ class _ProfileState extends State<Profile> {
               else {
                 final user = snapshot.data;
 
-                // Accessing userId from the Singleton class
-                int? userId = UsuarioAtual().userId;
-              
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,

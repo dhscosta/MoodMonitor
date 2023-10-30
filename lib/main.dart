@@ -10,7 +10,7 @@ class DiaryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Home()
+      home: Home(0)
     );
     // This trailing comma makes auto-formatting nicer for build methods.
 

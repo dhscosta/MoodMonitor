@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
+import 'Home.dart';
 
 class UserProfileEditScreen extends StatefulWidget {
    int id;
 
-  UserProfileEditScreen({required this.id});
+  UserProfileEditScreen(this.id);
 
   @override
   _UserProfileEditScreenState createState() => _UserProfileEditScreenState();
@@ -32,7 +33,9 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
 
     await SQLUsuarios.atualizarUsuario(widget.id, nome, senha, celEmail, dataNascimento, null);
 
-    Navigator.pop(context);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home(widget.id)));
   }
   @override
   Widget build(BuildContext context) {

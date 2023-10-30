@@ -6,15 +6,21 @@ import 'diary_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 
 class Home extends StatefulWidget{
-  int? id;
+  int id;
 
-  Home({this.id});
+  Home(this.id);
 
   @override
   _Home createState() => _Home();
 }
 
+
 class _Home extends State<Home> {
+  int getId()
+  {
+    return widget.id;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
