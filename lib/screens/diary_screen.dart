@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
+import 'calendario.dart';
+import 'profile.dart';
+import 'diary_screen.dart';
+import 'Home.dart';
+import 'package:moodmonitor/databases/avaliacoes_db.dart';
+import 'package:sqflite/sqflite.dart' as sql;
 
 class DiaryScreen extends StatefulWidget {
+  int id;
+
+  DiaryScreen(this.id);
   @override
   _DiaryScreenState createState() => _DiaryScreenState();
 }
@@ -19,6 +28,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   void _saveDiaryEntry() {
     print("Categoria: $selectedCategory");
     print("Diário: $diaryEntry");
+    adicionarAvaliacao(selectedCategory,diaryEntry, widget.id);
   }
 
   @override
@@ -84,10 +94,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
       ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _indiceAtual,
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        //onTap: onTabTapped,
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -98,14 +106,43 @@ class _DiaryScreenState extends State<DiaryScreen> {
               label: "Perfil",
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_balance),
-              label:"Saldo",
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(Icons.map),
+              icon: Icon(Icons.emoji_emotions),
               label: "Mapa",
               backgroundColor: Colors.blue),
-        ],
+        ],//
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(widget.id)),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile(widget.id)),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen(widget.id)),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen(widget.id)),
+              );
+              break;
+          }
+        },
       ),
     );
   }
@@ -134,5 +171,15 @@ class _DiaryScreenState extends State<DiaryScreen> {
         ),
       ),
     );
+
+
+  }
+  static Future<int> adicionarAvaliacao(String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+    final db = await SQLAvaliacoes.db();
+
+    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario};
+    final id = await db.insert('avaliacoes', dados,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    return id;
   }
 }

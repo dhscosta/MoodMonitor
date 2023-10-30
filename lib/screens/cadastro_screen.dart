@@ -4,6 +4,11 @@ import 'Home.dart';
 import 'sobre_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 import 'UsuarioAtual.dart';
+import 'calendario.dart';
+import 'profile.dart';
+import 'diary_screen.dart';
+
+
 
 /*class _LoginPageState extends StatefulWidget {
   @override
@@ -13,7 +18,9 @@ import 'UsuarioAtual.dart';
 class LoginPage extends StatelessWidget {
   String senha = "";
   String email = "";
+  int id;
 
+  LoginPage(this.id);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +60,8 @@ class LoginPage extends StatelessWidget {
                 onPressed: () async {
                   //_validarUsuario(email, senha);
                   final usuarios = await SQLUsuarios.validaUsuario(email, senha);
-                  final id = usuarios[0]['id'];
+                  final idDoUsuario = usuarios.first['id'];
+                  final id = idDoUsuario;
                   if(usuarios.isEmpty) {
                     showDialog(
                       context: context,
@@ -86,7 +94,7 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CadastroScreen()),
+                    MaterialPageRoute(builder: (context) => CadastroScreen(id)),
                   );
                 },
                 child: Text('Cadastre-se'),
@@ -95,7 +103,7 @@ class LoginPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SobreScreen()),
+                    MaterialPageRoute(builder: (context) => SobreScreen(id)),
                   );
                 },
                 child: Text('Sobre'),
@@ -103,6 +111,57 @@ class LoginPage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.yellow,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Início",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Perfil",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions),
+              label: "Mapa",
+              backgroundColor: Colors.blue),
+        ],//
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(id)),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile(id)),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen(id)),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen(id)),
+              );
+              break;
+          }
+        },
       ),
     );
   }
@@ -114,6 +173,11 @@ class CadastroScreen extends StatelessWidget {
   String senha = "";
   String dataNascimento = "";
   String? genero = "";
+
+  int id;
+
+  CadastroScreen(this.id);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,7 +266,7 @@ class CadastroScreen extends StatelessWidget {
                   print(nome + " " + senha);
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage())
+                      MaterialPageRoute(builder: (context) => LoginPage(id))
                   );
                 },
                 child: Text('Cadastrar'),
@@ -210,6 +274,57 @@ class CadastroScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.yellow,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Início",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Perfil",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions),
+              label: "Mapa",
+              backgroundColor: Colors.blue),
+        ],//
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(id)),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile(id)),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen(id)),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen(id)),
+              );
+              break;
+          }
+        },
       ),
     );
   }

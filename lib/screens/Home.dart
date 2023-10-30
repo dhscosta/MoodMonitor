@@ -47,7 +47,7 @@ class _Home extends State<Home> {
                     onPressed: (){
                       Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => TableScreen()));
+                      MaterialPageRoute(builder: (context) => TableScreen(widget.id)));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue, // Cor de fundo do botão
@@ -72,7 +72,7 @@ class _Home extends State<Home> {
                     onPressed:(){
                       Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage())
+                      MaterialPageRoute(builder: (context) => LoginPage(widget.id))
                 );
                     },
                     style: ElevatedButton.styleFrom(
@@ -103,7 +103,7 @@ class _Home extends State<Home> {
                     onPressed: (){
                       Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DiaryScreen()));
+                      MaterialPageRoute(builder: (context) => DiaryScreen(widget.id)));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue, // Cor de fundo do botão

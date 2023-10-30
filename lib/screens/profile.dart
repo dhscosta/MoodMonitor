@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
 import 'UsuarioAtual.dart';
 import 'editprofile.dart';
+import 'calendario.dart';
+import 'profile.dart';
+import 'diary_screen.dart';
+import 'Home.dart';
 
 class Profile extends StatefulWidget {
   int id;
@@ -13,6 +17,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+    var  name ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +29,7 @@ class _ProfileState extends State<Profile> {
       body: Center(
         child: SingleChildScrollView(
           child: FutureBuilder(
-            future: _recuperaUltimoUsuario(),
+            future:  getName(),
             builder: (context, snapshot) {
 
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,7 +39,9 @@ class _ProfileState extends State<Profile> {
                 return Text('Ocorreu um erro!');
               }
               else {
-                final user = snapshot.data;
+               // final user =  await SQLUsuarios.recuperaUsuario(widget.id);
+               // name=   user[0]['name'];
+               // final name = snapshot.data;
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +53,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      user?['nome'] ?? "Nome do Usuário",
+                      name ?? "Nome do Usuário",
                       style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20.0),
@@ -86,14 +94,65 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.yellow,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Início",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Perfil",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions),
+              label: "Mapa",
+              backgroundColor: Colors.blue),
+        ],//
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(widget.id)),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile(widget.id)),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen(widget.id)),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen(widget.id)),
+              );
+              break;
+          }
+        },
+      ),
     );
   }
 
-  Future _recuperaUltimoUsuario() async {
-    final users = await SQLUsuarios.listarUsuarios();
-    if (users.isNotEmpty) {
-      return users[0];
+  Future getName() async
+    {
+      final user =  await SQLUsuarios.recuperaUsuario(widget.id);
+      name=   user[0]['nome'];
     }
-    return null;
-  }
+
+
 }

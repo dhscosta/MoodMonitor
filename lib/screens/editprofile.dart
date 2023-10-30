@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
+import 'calendario.dart';
+import 'profile.dart';
+import 'diary_screen.dart';
 import 'Home.dart';
 
 class UserProfileEditScreen extends StatefulWidget {
@@ -70,6 +73,57 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.yellow,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Início",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Perfil",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: "Saldo",
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_emotions),
+              label: "Mapa",
+              backgroundColor: Colors.blue),
+        ],//
+        onTap: (int index) {
+          switch (index) {
+            case 0:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home(widget.id)),
+              );
+              break;
+            case 1:
+            // teste
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile(widget.id)),
+              );
+              break;
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TableScreen(widget.id)),
+              );
+              break;
+            case 3:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DiaryScreen(widget.id)),
+              );
+              break;
+          }
+        },
       ),
     );
   }
