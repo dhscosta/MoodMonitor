@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "932549845839",
+    "firebase_url": "https://moodmonitor-dac52-default-rtdb.firebaseio.com",
+    "project_id": "moodmonitor-dac52",
+    "storage_bucket": "moodmonitor-dac52.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932549845839:android:24ba832a819786e1f95b3a",
+        "android_client_info": {
+          "package_name": "com.example.moodmonitor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjp7TPeURuPajAEcTJMr9xNYfDZX3oDYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

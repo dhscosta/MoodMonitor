@@ -7,7 +7,7 @@ import 'Home.dart';
 class DetalhesDia extends StatefulWidget {
   int id;
 
-  DetalhesDia(this.id);
+  DetalhesDia(this.id, {super.key});
   @override
   _DetalhesDia createState() => _DetalhesDia();
 }
@@ -19,10 +19,10 @@ class _DetalhesDia extends State<DetalhesDia>{
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Detalhes do Dia'),
+          title: const Text('Detalhes do Dia'),
           centerTitle: true,
         ),
-        body: Center(
+        body: const Center(
           child: SingleChildScrollView(
             child: Column(
             children: [
@@ -52,7 +52,7 @@ class _DetalhesDia extends State<DetalhesDia>{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 250,
                         height: 500,
                         child: Text(
@@ -71,7 +71,7 @@ class _DetalhesDia extends State<DetalhesDia>{
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.white,
           selectedItemColor: Colors.yellow,
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "Início",

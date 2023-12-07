@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
-import 'UsuarioAtual.dart';
 import 'editprofile.dart';
 import 'calendario.dart';
-import 'profile.dart';
 import 'diary_screen.dart';
 import 'Home.dart';
 
 class Profile extends StatefulWidget {
   int id;
 
-  Profile(this.id);
+  Profile(this.id, {super.key});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -25,7 +23,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil'),
+        title: const Text('Perfil'),
         centerTitle: true,
       ),
       body: Center(
@@ -35,10 +33,10 @@ class _ProfileState extends State<Profile> {
             builder: (context, snapshot) {
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               else if (snapshot.error != null) {
-                return Text('Usuário não logado');
+                return const Text('Usuário não logado');
               }
               else {
                // final user =  await SQLUsuarios.recuperaUsuario(widget.id);
@@ -49,52 +47,52 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 50.0,
                       backgroundImage: AssetImage('assets/user_profile_image.jpg'),
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     Text(
                       name ?? "Nome do Usuário",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       email ?? "Email do usuário",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       dataNascimento ?? "Data de nascimento do Usuário",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () {Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => UserProfileEditScreen(widget.id)));
                       },
-                      child: Text('Editar Perfil'),
+                      child: const Text('Editar Perfil'),
                     ),
-                    SizedBox(height: 20.0),
+                    const SizedBox(height: 20.0),
                     Column(
                       children: <Widget>[
-                        Text('Título 1'),
+                        const Text('Título 1'),
                         Image.asset(
                           'assets/Icon-192.png',
                           width: 100,
                           height: 100,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                       ],
                     ),
                     Column(
                       children: <Widget>[
-                        Text('Título 2'),
+                        const Text('Título 2'),
                         Image.asset(
                           'assets/Icon-192.png',
                           width: 100,
                           height: 100,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                       ],
                     ),
                   ],
@@ -107,7 +105,7 @@ class _ProfileState extends State<Profile> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",

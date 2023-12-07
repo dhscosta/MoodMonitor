@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'calendario.dart';
 import 'profile.dart';
-import 'diary_screen.dart';
 import 'Home.dart';
 import 'package:moodmonitor/databases/avaliacoes_db.dart';
 import 'package:sqflite/sqflite.dart' as sql;
@@ -9,7 +8,7 @@ import 'package:sqflite/sqflite.dart' as sql;
 class DiaryScreen extends StatefulWidget {
   int id;
 
-  DiaryScreen(this.id);
+  DiaryScreen(this.id, {super.key});
   @override
   _DiaryScreenState createState() => _DiaryScreenState();
 }
@@ -17,7 +16,7 @@ class DiaryScreen extends StatefulWidget {
 class _DiaryScreenState extends State<DiaryScreen> {
   String selectedCategory = "Muito Feliz";
   String diaryEntry = "";
-  int _indiceAtual = 0;
+  final int _indiceAtual = 0;
 
   void _setCategory(String category) {
     setState(() {
@@ -29,13 +28,14 @@ class _DiaryScreenState extends State<DiaryScreen> {
     print("Categoria: $selectedCategory");
     print("Diário: $diaryEntry");
     adicionarAvaliacao(selectedCategory,diaryEntry, widget.id);
+    SQLAvaliacoes.sincronizarComFirebase();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meu Diário'),
+        title: const Text('Meu Diário'),
         centerTitle: true,
       ),
       body: Padding(
@@ -44,11 +44,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Como foi o seu dia?',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -57,7 +57,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 buildCategoryButton("Indiferente", "😐"),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -66,27 +66,27 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 buildCategoryButton("Bravo", "😡"),
               ],
             ),
-            SizedBox(height: 15),
-            Text(
+            const SizedBox(height: 15),
+            const Text(
               'Conte-nos mais sobre o seu dia:',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               maxLines: 5,
               onChanged: (text) {
                 diaryEntry = text;
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Descreva seu dia aqui...',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: _saveDiaryEntry,
-                child: Text('Salvar'),
+                child: const Text('Salvar'),
               ),
             ),
           ],
@@ -96,7 +96,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",
@@ -155,15 +155,15 @@ class _DiaryScreenState extends State<DiaryScreen> {
           _setCategory(category);
         },
         style: ElevatedButton.styleFrom(
-          primary: selectedCategory == category ? Colors.blue : Colors.white,
+          backgroundColor: selectedCategory == category ? Colors.blue : Colors.white,
         ),
         child: Column(
           children: [
-            Text(emoji, style: TextStyle(fontSize: 30)),
-            SizedBox(height: 10),
+            Text(emoji, style: const TextStyle(fontSize: 30)),
+            const SizedBox(height: 10),
             Text(
                 category,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                 )
             ),
@@ -180,6 +180,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
     final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario};
     final id = await db.insert('avaliacoes', dados,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
+
     return id;
   }
 }

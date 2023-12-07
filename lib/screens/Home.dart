@@ -3,16 +3,20 @@ import 'cadastro_screen.dart';
 import 'calendario.dart';
 import 'profile.dart';
 import 'diary_screen.dart';
-import 'package:moodmonitor/databases/usuario_db.dart';
+
 
 class Home extends StatefulWidget{
   int id;
 
-  Home(this.id);
+  Home(this.id, {super.key});
 
   @override
   _Home createState() => _Home();
 }
+
+
+
+
 
 
 class _Home extends State<Home> {
@@ -27,14 +31,14 @@ class _Home extends State<Home> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Mood Monitor'),
+          title: const Text('Mood Monitor'),
           centerTitle: true,
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Centraliza verticalmente
             children: [
-              Text(
+              const Text(
                 'Olá, como vai seu dia?',
                 style: TextStyle(
                     fontSize: 30
@@ -50,15 +54,14 @@ class _Home extends State<Home> {
                       MaterialPageRoute(builder: (context) => TableScreen(widget.id)));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // Cor de fundo do botão
-                      onPrimary: Colors.white, // Cor do texto do botão
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue, // Cor do texto do botão
                       elevation: 3, // Altura da sombra
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Borda arredondada
                       ),
-                      textStyle: TextStyle(fontSize: 18), // Estilo do texto
+                      textStyle: const TextStyle(fontSize: 18), // Estilo do texto
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                             Icons.calendar_month,
@@ -76,15 +79,14 @@ class _Home extends State<Home> {
                 );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // Cor de fundo do botão
-                      onPrimary: Colors.white, // Cor do texto do botão
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue, // Cor do texto do botão
                       elevation: 3, // Altura da sombra
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Borda arredondada
                       ),
-                      textStyle: TextStyle(fontSize: 18), // Estilo do texto
+                      textStyle: const TextStyle(fontSize: 18), // Estilo do texto
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                             Icons.key,
@@ -106,15 +108,14 @@ class _Home extends State<Home> {
                       MaterialPageRoute(builder: (context) => DiaryScreen(widget.id)));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // Cor de fundo do botão
-                      onPrimary: Colors.white, // Cor do texto do botão
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue, // Cor do texto do botão
                       elevation: 3, // Altura da sombra
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Borda arredondada
                       ),
-                      textStyle: TextStyle(fontSize: 18), // Estilo do texto
+                      textStyle: const TextStyle(fontSize: 18), // Estilo do texto
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                             Icons.add_reaction,
@@ -133,15 +134,14 @@ class _Home extends State<Home> {
                       //_recuperaUsuario(id);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue, // Cor de fundo do botão
-                      onPrimary: Colors.white, // Cor do texto do botão
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue, // Cor do texto do botão
                       elevation: 3, // Altura da sombra
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10), // Borda arredondada
                       ),
-                      textStyle: TextStyle(fontSize: 18), // Estilo do texto
+                      textStyle: const TextStyle(fontSize: 18), // Estilo do texto
                     ),
-                    child: Column(
+                    child: const Column(
                       children: [
                         Icon(
                             Icons.face,

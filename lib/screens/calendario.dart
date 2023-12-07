@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'DetalhesDia.dart';
-import 'calendario.dart';
 import 'profile.dart';
 import 'diary_screen.dart';
 import 'Home.dart';
@@ -9,7 +8,7 @@ import 'Home.dart';
 class TableScreen extends StatefulWidget {
   int id;
 
-  TableScreen(this.id);
+  TableScreen(this.id, {super.key});
   @override
   _TableScreenState createState() => _TableScreenState();
 }
@@ -23,7 +22,7 @@ class _TableScreenState extends State<TableScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Calendário'),
+          title: const Text('Calendário'),
           centerTitle: true,
       ),
       body: TableCalendar(
@@ -68,7 +67,7 @@ class _TableScreenState extends State<TableScreen> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",

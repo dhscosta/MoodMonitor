@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'Home.dart';
 import 'sobre_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
-import 'UsuarioAtual.dart';
 import 'calendario.dart';
 import 'profile.dart';
 import 'diary_screen.dart';
@@ -20,22 +18,22 @@ class LoginPage extends StatelessWidget {
   String email = "";
   int id;
 
-  LoginPage(this.id);
+  LoginPage(this.id, {super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tela de Login'),
+        title: const Text('Tela de Login'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //email
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
@@ -43,11 +41,11 @@ class LoginPage extends StatelessWidget {
                   email = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               //senha
               TextField(
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Senha',
                   border: OutlineInputBorder(),
                 ),
@@ -55,33 +53,52 @@ class LoginPage extends StatelessWidget {
                   senha = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
                   //_validarUsuario(email, senha);
                   final usuarios = await SQLUsuarios.validaUsuario(email, senha);
-                  final idDoUsuario = usuarios.first['id'];
-                  final id = idDoUsuario;
                   if(usuarios.isEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('ERRO!'),
-                          content: Text('Não foi possivel fazer o login.'),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Text('OK'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
+                 final usu =  await SQLUsuarios.doesUsuExist(email, senha);
+                    if(usu != null)
+                      {
+                        //criar no db local
+            await SQLUsuarios.adicionarUsuario(usu['nome'], usu['sincronizado'], usu['senha'], usu['celEmail'], usu['dataNascimento'], usu['genero']);
+                        // valida ?
+            await SQLUsuarios.validaUsuario(usu['celEmail'], usu['senha']);
+                       var id = usu['id'];
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home(id)),
                         );
-                      },
-                    );
+                      }
+                    else
+                      {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('ERRO!'),
+                              content: const Text('Não foi possivel fazer o login.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
                   }
                   else {
+
+                    final idDoUsuario = usuarios.first['id'];
+                    var id = idDoUsuario;
                     print('teste2');
                     Navigator.push(
                       context,
@@ -89,7 +106,7 @@ class LoginPage extends StatelessWidget {
                     );
                   }
                 },
-                child: Text('Entrar'),
+                child: const Text('Entrar'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -98,7 +115,7 @@ class LoginPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => CadastroScreen(id)),
                   );
                 },
-                child: Text('Cadastre-se'),
+                child: const Text('Cadastre-se'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -107,7 +124,7 @@ class LoginPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => SobreScreen(id)),
                   );
                 },
-                child: Text('Sobre'),
+                child: const Text('Sobre'),
               ),
             ],
           ),
@@ -116,7 +133,7 @@ class LoginPage extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",
@@ -177,23 +194,23 @@ class CadastroScreen extends StatelessWidget {
 
   int id;
 
-  CadastroScreen(this.id);
+  CadastroScreen(this.id, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tela de Cadastro'),
+        title: const Text('Tela de Cadastro'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               //nome
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nome',
                   border: OutlineInputBorder(),
                 ),
@@ -201,10 +218,10 @@ class CadastroScreen extends StatelessWidget {
                   nome = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               //email
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
@@ -212,11 +229,11 @@ class CadastroScreen extends StatelessWidget {
                   email = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               //email
               TextField(
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Senha',
                   border: OutlineInputBorder(),
                 ),
@@ -224,23 +241,23 @@ class CadastroScreen extends StatelessWidget {
                   senha = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               //data de nascimento
-              Text(
+              const Text(
                 'Data de Nascimento',
                 style: TextStyle(fontSize: 18),
               ),
               TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value){
                   dataNascimento = value;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               //escolha de genero
-              Text(
+              const Text(
                 'Gênero',
                 style: TextStyle(fontSize: 18),
               ),
@@ -260,17 +277,18 @@ class CadastroScreen extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   _adicionarUsuario(nome, senha, email, dataNascimento, genero);
-                  print(nome + " " + senha);
+
+                  print("$nome $senha");
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage(id))
                   );
                 },
-                child: Text('Cadastrar'),
+                child: const Text('Cadastrar'),
               ),
             ],
           ),
@@ -279,7 +297,7 @@ class CadastroScreen extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",
@@ -331,9 +349,16 @@ class CadastroScreen extends StatelessWidget {
   }
 }
 
-Future _adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async{
-  await SQLUsuarios.adicionarUsuario(nome, senha, celEmail, dataNascimento, genero);
+  Future _adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async{
+
+  await SQLUsuarios.adicionarUsuario(nome, 0, senha, celEmail, dataNascimento, genero);
+  await SQLUsuarios.signUp(celEmail, senha);
+  await SQLUsuarios.signIn(celEmail, senha);
+  await SQLUsuarios.sincronizarComFirebase();
+
 }
+
+
 
 //Future _validarUsuario(String email, String senha) async {
 //final usuarios = await SQLUsuarios.validaUsuario(email, senha);

@@ -8,7 +8,7 @@ import 'Home.dart';
 class UserProfileEditScreen extends StatefulWidget {
    int id;
 
-  UserProfileEditScreen(this.id);
+  UserProfileEditScreen(this.id, {super.key});
 
   @override
   _UserProfileEditScreenState createState() => _UserProfileEditScreenState();
@@ -44,7 +44,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Perfil'),
+        title: const Text('Editar Perfil'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,24 +52,24 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Nome'),
+              decoration: const InputDecoration(labelText: 'Nome'),
             ),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Senha'),
+              decoration: const InputDecoration(labelText: 'Senha'),
             ),
             TextField(
               controller: _birthController,
-              decoration: InputDecoration(labelText: 'Data de Nascimento'),
+              decoration: const InputDecoration(labelText: 'Data de Nascimento'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: updateUserProfile,
-              child: Text('Salvar Alterações'),
+              child: const Text('Salvar Alterações'),
             ),
           ],
         ),
@@ -77,7 +77,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Colors.yellow,
-        items: [
+        items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Início",
