@@ -36,10 +36,20 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
 
     await SQLUsuarios.atualizarUsuario(widget.id, nome, senha, celEmail, dataNascimento, null);
 
+    Map<String, dynamic> novosAtributos = {
+      'nome': nome,
+      'senha': senha,
+      'celEmail': celEmail,
+      'dataNascimento': dataNascimento,
+
+    };
+
+    await SQLUsuarios.atualizarFirebase(widget.id,novosAtributos );
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Home(widget.id)));
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

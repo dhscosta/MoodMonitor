@@ -81,19 +81,33 @@ class SQLUsuarios {
       final db = await SQLUsuarios.db();
 
       // Obter registros não sincronizados
-      final registrosNaoSincronizados =
-          await db.query('usuarios', where: "sincronizado = ?", whereArgs: [0]);
+      final registrosNaoSincronizados = await db.query(
+        'usuarios',
+        where: "sincronizado = ?",
+        whereArgs: [0],
+      );
 
       // Enviar registros para o Firebase
       for (var registro in registrosNaoSincronizados) {
-        await db.update('usuarios', {'sincronizado': 1},
-            where: "id = ?", whereArgs: [registro['id']]);
-        await FirebaseFirestore.instance.collection('usuarios').add(registro);
-
         // Atualizar o campo 'sincronizado' localmente
+        await db.update(
+          'usuarios',
+          {'sincronizado': 1},
+          where: "id = ?",
+          whereArgs: [registro['id']],
+        );
+
+        // Criar uma cópia mutável do mapa antes de modificá-lo
+        Map<String, dynamic> registroModificavel = Map.from(registro);
+        registroModificavel['sincronizado'] = 1;
+
+        await FirebaseFirestore.instance
+            .collection('usuarios')
+            .add(registroModificavel);
       }
     }
   }
+
 
   static Future<sql.Database> db() async {
     return sql.openDatabase(
@@ -145,6 +159,41 @@ class SQLUsuarios {
     final db = await SQLUsuarios.db();
     return db.query('usuarios', where: "id = ?", whereArgs: [id], limit: 1);
   }
+
+
+
+ static Future<void> atualizarFirebase(int id, Map<String, dynamic> novosAtributos) async {
+    if (await checkInternetConnection()) {
+      // Verificar se o usuário já existe no Firebase
+      var usuarioExistente = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .where('id', isEqualTo: id)
+          .get();
+
+      if (usuarioExistente.docs.isNotEmpty) {
+        // Se o usuário existir, atualizar os atributos
+        var documento = usuarioExistente.docs.first;
+        print("TESTE12");
+        await FirebaseFirestore.instance.collection('usuarios').doc(documento.id).update(novosAtributos);
+      } else {
+        // Se o usuário não existir, criar um novo registro
+        print("TESTE11");
+        Map<String, dynamic> novoRegistro = {
+          'id': id,
+          'nome': novosAtributos['nome'],
+          'senha': novosAtributos['senha'],
+          'celEmail': novosAtributos['celEmail'],
+          'dataNascimento': novosAtributos['dataNascimento'],
+          'genero': novosAtributos['genero'],
+          'createdAt': DateTime.now().toString(),
+          'sincronizado': 1, // Você pode ajustar conforme necessário
+        };
+        print("TESTE14");
+        await FirebaseFirestore.instance.collection('usuarios').add(novoRegistro);
+      }
+    }
+  }
+
 
   static Future<int> atualizarUsuario(int id, String nome, String senha,
       String celEmail, String dataNascimento, String? genero) async {

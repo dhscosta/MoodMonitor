@@ -24,11 +24,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
     });
   }
 
-  void _saveDiaryEntry() {
-    print("Categoria: $selectedCategory");
-    print("Diário: $diaryEntry");
-    adicionarAvaliacao(selectedCategory,diaryEntry, widget.id);
-    SQLAvaliacoes.sincronizarComFirebase();
+  Future _saveDiaryEntry() async {
+
+    await SQLAvaliacoes.adicionarAvaliacao(selectedCategory,diaryEntry, widget.id);
+    await SQLAvaliacoes.sincronizarComFirebase();
   }
 
   @override
@@ -174,6 +173,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
 
   }
+  /*
   static Future<int> adicionarAvaliacao(String avaliacaoDia, String poucoDoDia, int idUsuario) async {
     final db = await SQLAvaliacoes.db();
 
@@ -183,4 +183,6 @@ class _DiaryScreenState extends State<DiaryScreen> {
 
     return id;
   }
+   */
+
 }

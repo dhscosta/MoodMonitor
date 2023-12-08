@@ -24,19 +24,36 @@ class SQLAvaliacoes {
   static Future<void> sincronizarComFirebase() async {
     // Verificar a conexão antes de sincronizar
     if (await checkInternetConnection()) {
+
       final db = await SQLAvaliacoes.db();
 
       // Obter registros não sincronizados
-      final registrosNaoSincronizados = await db.query('avaliacoes', where: "sincronizado = ?", whereArgs: [0]);
+      final registrosNaoSincronizados = await db.query(
+        'avaliacoes',
+        where: "sincronizado = ?",
+        whereArgs: [0],
+      );
 
       // Enviar registros para o Firebase
       for (var registro in registrosNaoSincronizados) {
-        await db.update('avaliacoes', {'sincronizado': 1},
-            where: "id = ?", whereArgs: [registro['id']]);
-        await FirebaseFirestore.instance.collection('avaliacoes').add(registro);
-
+        print("entrou aqui4");
         // Atualizar o campo 'sincronizado' localmente
+        await db.update(
+          'avaliacoes',
+          {'sincronizado': 1},
+          where: "id = ?",
+          whereArgs: [registro['id']],
+        );
+
+        // Criar uma cópia mutável do mapa antes de modificá-lo
+        Map<String, dynamic> registroModificavel = Map.from(registro);
+        registroModificavel['sincronizado'] = 1;
+
+        await FirebaseFirestore.instance
+            .collection('avaliacoes')
+            .add(registroModificavel);
       }
+
     }
   }
 
@@ -50,12 +67,20 @@ class SQLAvaliacoes {
     );
   }
 
-  static Future<int> adicionarAvaliacao(String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+  static Future<int> adicionarAvaliacao(
+
+      String avaliacaoDia, String poucoDoDia, int idUsuario) async {
     final db = await SQLAvaliacoes.db();
 
-    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario};
+    final dados = {
+      'avaliacaoDia': avaliacaoDia,
+      'poucoDoDia': poucoDoDia,
+      'idUsuario': idUsuario,
+      'sincronizado': 0
+    };
     final id = await db.insert('avaliacoes', dados,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
+
     return id;
   }
 
@@ -64,9 +89,11 @@ class SQLAvaliacoes {
     return db.query('avaliacoes', orderBy: "id");
   }
 
-  static Future<List<Map<String, dynamic>>> recuperarAvaliacoesDoUsuario(int idUsuario) async {
+  static Future<List<Map<String, dynamic>>> recuperarAvaliacoesDoUsuario(
+      int idUsuario) async {
     final db = await SQLAvaliacoes.db();
-    return db.query('avaliacoes', where: "idUsuario = ?", whereArgs: [idUsuario]);
+    return db
+        .query('avaliacoes', where: "idUsuario = ?", whereArgs: [idUsuario]);
   }
 
   static Future<List<Map<String, dynamic>>> recuperarAvaliacao(int id) async {
@@ -86,7 +113,7 @@ class SQLAvaliacoes {
     };
 
     final result =
-    await db.update('avaliacoes', dados, where: "id = ?", whereArgs: [id]);
+        await db.update('avaliacoes', dados, where: "id = ?", whereArgs: [id]);
     return result;
   }
 

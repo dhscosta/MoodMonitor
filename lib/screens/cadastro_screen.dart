@@ -6,8 +6,6 @@ import 'calendario.dart';
 import 'profile.dart';
 import 'diary_screen.dart';
 
-
-
 /*class _LoginPageState extends StatefulWidget {
   @override
   LoginPage createState() => LoginPage();
@@ -37,7 +35,7 @@ class LoginPage extends StatelessWidget {
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   email = value;
                 },
               ),
@@ -49,7 +47,7 @@ class LoginPage extends StatelessWidget {
                   labelText: 'Senha',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   senha = value;
                 },
               ),
@@ -57,46 +55,49 @@ class LoginPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   //_validarUsuario(email, senha);
-                  final usuarios = await SQLUsuarios.validaUsuario(email, senha);
-                  if(usuarios.isEmpty) {
-                 final usu =  await SQLUsuarios.doesUsuExist(email, senha);
-                    if(usu != null)
-                      {
-                        //criar no db local
-            await SQLUsuarios.adicionarUsuario(usu['nome'], usu['sincronizado'], usu['senha'], usu['celEmail'], usu['dataNascimento'], usu['genero']);
-                        // valida ?
-            await SQLUsuarios.validaUsuario(usu['celEmail'], usu['senha']);
-                       var id = usu['id'];
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home(id)),
-                        );
-                      }
-                    else
-                      {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('ERRO!'),
-                              content: const Text('Não foi possivel fazer o login.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-
-                  }
-                  else {
-
+                  final usuarios =
+                      await SQLUsuarios.validaUsuario(email, senha);
+                  if (usuarios.isEmpty) {
+                    final usu = await SQLUsuarios.doesUsuExist(email, senha);
+                    if (usu != null) {
+                      //criar no db local
+                      await SQLUsuarios.adicionarUsuario(
+                          usu['nome'],
+                          usu['sincronizado'],
+                          usu['senha'],
+                          usu['celEmail'],
+                          usu['dataNascimento'],
+                          usu['genero']);
+                      // valida ?
+                      await SQLUsuarios.validaUsuario(
+                          usu['celEmail'], usu['senha']);
+                      var id = usu['id'];
+                      print("QUE SACO"+id);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home(id)),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('ERRO!'),
+                            content:
+                                const Text('Não foi possivel fazer o login.'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  } else {
                     final idDoUsuario = usuarios.first['id'];
                     var id = idDoUsuario;
                     print('teste2');
@@ -150,7 +151,7 @@ class LoginPage extends StatelessWidget {
               icon: Icon(Icons.emoji_emotions),
               label: "Mapa",
               backgroundColor: Colors.blue),
-        ],//
+        ], //
         onTap: (int index) {
           switch (index) {
             case 0:
@@ -160,7 +161,7 @@ class LoginPage extends StatelessWidget {
               );
               break;
             case 1:
-            // teste
+              // teste
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Profile(id)),
@@ -214,7 +215,7 @@ class CadastroScreen extends StatelessWidget {
                   labelText: 'Nome',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   nome = value;
                 },
               ),
@@ -225,7 +226,7 @@ class CadastroScreen extends StatelessWidget {
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   email = value;
                 },
               ),
@@ -237,7 +238,7 @@ class CadastroScreen extends StatelessWidget {
                   labelText: 'Senha',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   senha = value;
                 },
               ),
@@ -251,7 +252,7 @@ class CadastroScreen extends StatelessWidget {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (value){
+                onChanged: (value) {
                   dataNascimento = value;
                 },
               ),
@@ -264,7 +265,8 @@ class CadastroScreen extends StatelessWidget {
               DropdownButton<String>(
                 value: null, // Valor inicial (implementar depois)
                 onChanged: (value) {
-                  genero = value;// Funcionalidade para quando selecionar (implementar depois)
+                  genero =
+                      value; // Funcionalidade para quando selecionar (implementar depois)
                 },
                 items: <String>[
                   'Masculino',
@@ -283,10 +285,8 @@ class CadastroScreen extends StatelessWidget {
                   _adicionarUsuario(nome, senha, email, dataNascimento, genero);
 
                   print("$nome $senha");
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage(id))
-                  );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage(id)));
                 },
                 child: const Text('Cadastrar'),
               ),
@@ -314,7 +314,7 @@ class CadastroScreen extends StatelessWidget {
               icon: Icon(Icons.emoji_emotions),
               label: "Mapa",
               backgroundColor: Colors.blue),
-        ],//
+        ], //
         onTap: (int index) {
           switch (index) {
             case 0:
@@ -324,7 +324,7 @@ class CadastroScreen extends StatelessWidget {
               );
               break;
             case 1:
-            // teste
+              // teste
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Profile(id)),
@@ -349,16 +349,14 @@ class CadastroScreen extends StatelessWidget {
   }
 }
 
-  Future _adicionarUsuario(String nome, String senha, String celEmail, String dataNascimento, String? genero) async{
-
-  await SQLUsuarios.adicionarUsuario(nome, 0, senha, celEmail, dataNascimento, genero);
+Future _adicionarUsuario(String nome, String senha, String celEmail,
+    String dataNascimento, String? genero) async {
+  await SQLUsuarios.adicionarUsuario(
+      nome, 0, senha, celEmail, dataNascimento, genero);
   await SQLUsuarios.signUp(celEmail, senha);
   await SQLUsuarios.signIn(celEmail, senha);
   await SQLUsuarios.sincronizarComFirebase();
-
 }
-
-
 
 //Future _validarUsuario(String email, String senha) async {
 //final usuarios = await SQLUsuarios.validaUsuario(email, senha);
