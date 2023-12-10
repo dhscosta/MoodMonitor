@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'calendario.dart';
 import 'profile.dart';
 import 'Home.dart';
 import 'package:moodmonitor/databases/avaliacoes_db.dart';
 import 'package:sqflite/sqflite.dart' as sql;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DiaryScreen extends StatefulWidget {
   int id;
@@ -14,20 +16,28 @@ class DiaryScreen extends StatefulWidget {
 }
 
 class _DiaryScreenState extends State<DiaryScreen> {
-  String selectedCategory = "Muito Feliz";
+  int selectedCategory = 0;
   String diaryEntry = "";
-  final int _indiceAtual = 0;
+  int _indiceAtual = 0;
+  TextEditingController _textController = TextEditingController();
+  Color corBotao = Colors.white;
 
-  void _setCategory(String category) {
+  void _setCategory(int valor) {
     setState(() {
-      selectedCategory = category;
+      selectedCategory = valor;
     });
   }
 
-  Future _saveDiaryEntry() async {
+  void _saveDiaryEntry() async {
+    List<Map<String, dynamic>> resultado = await SQLAvaliacoes.recuperarAvaliacao(widget.id, DateFormat('dd/MM/yyyy').format(DateTime.now()));
 
-    await SQLAvaliacoes.adicionarAvaliacao(selectedCategory,diaryEntry, widget.id);
+    if(resultado.length > 0){
+      SQLAvaliacoes.atualizarAvaliacao(resultado[0]['id'], selectedCategory, diaryEntry);
+    }else{
+      SQLAvaliacoes.adicionarAvaliacao(selectedCategory, diaryEntry, widget.id, DateTime.now());
+    }
     await SQLAvaliacoes.sincronizarComFirebase();
+
   }
 
   @override
@@ -51,18 +61,18 @@ class _DiaryScreenState extends State<DiaryScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildCategoryButton("Feliz", "😊"),
-                buildCategoryButton("Relaxado", "😌"),
-                buildCategoryButton("Indiferente", "😐"),
+                buildCategoryButton("Feliz", FaIcon(FontAwesomeIcons.grinBeam, size: 50, color: Colors.yellow), 6),
+                buildCategoryButton("Relaxado", FaIcon(FontAwesomeIcons.smileWink, size: 50, color: Colors.green), 5),
+                buildCategoryButton("Indiferente", FaIcon(FontAwesomeIcons.mehBlank, size: 50, color: Colors.blueGrey), 4),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                buildCategoryButton("Triste", "😢"),
-                buildCategoryButton("Ansioso", "😰"),
-                buildCategoryButton("Bravo", "😡"),
+                buildCategoryButton("Triste", FaIcon(FontAwesomeIcons.sadTear, size: 50, color: Colors.blue), 3),
+                buildCategoryButton("Ansioso", FaIcon(FontAwesomeIcons.tired, size: 50, color: Colors.purple), 2),
+                buildCategoryButton("Bravo", FaIcon(FontAwesomeIcons.angry, size: 50, color: Colors.red), 1),
               ],
             ),
             const SizedBox(height: 15),
@@ -72,6 +82,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _textController,
               maxLines: 5,
               onChanged: (text) {
                 diaryEntry = text;
@@ -84,8 +95,34 @@ class _DiaryScreenState extends State<DiaryScreen> {
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: _saveDiaryEntry,
-                child: const Text('Salvar'),
+                onPressed: () {
+                  _saveDiaryEntry();
+                  _textController.clear();
+                  setState(() {
+                    corBotao = Colors.white;
+                  });
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Avaliação salva!'),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Ok!'),
+                            ),
+                          ],
+                        ),
+                        contentPadding: EdgeInsets.all(16.0),
+                      );
+                    },
+                  );
+                },
+                child: Text('Salvar'),
               ),
             ),
           ],
@@ -146,20 +183,23 @@ class _DiaryScreenState extends State<DiaryScreen> {
     );
   }
 
-  Widget buildCategoryButton(String category, String emoji) {
+  Widget buildCategoryButton(String category, FaIcon icone, int valor) {
     return SizedBox(
-      width: 100,
+      width: 120,
       child: ElevatedButton(
         onPressed: () {
-          _setCategory(category);
+          _setCategory(valor);
+          setState(() {
+            corBotao = Colors.grey;
+          });
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: selectedCategory == category ? Colors.blue : Colors.white,
+          backgroundColor: (selectedCategory == valor) ? corBotao : Colors.white,
         ),
         child: Column(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 30)),
-            const SizedBox(height: 10),
+            icone,
+            SizedBox(height: 5),
             Text(
                 category,
                 style: const TextStyle(
@@ -170,19 +210,5 @@ class _DiaryScreenState extends State<DiaryScreen> {
         ),
       ),
     );
-
-
   }
-  /*
-  static Future<int> adicionarAvaliacao(String avaliacaoDia, String poucoDoDia, int idUsuario) async {
-    final db = await SQLAvaliacoes.db();
-
-    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario};
-    final id = await db.insert('avaliacoes', dados,
-        conflictAlgorithm: sql.ConflictAlgorithm.replace);
-
-    return id;
-  }
-   */
-
 }

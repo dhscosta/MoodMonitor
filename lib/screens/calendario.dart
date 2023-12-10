@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'DetalhesDia.dart';
 import 'profile.dart';
@@ -46,7 +47,7 @@ class _TableScreenState extends State<TableScreen> {
               _focusedDay = focusedDay;
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DetalhesDia(widget.id))
+                MaterialPageRoute(builder: (context) => DetalhesDia(widget.id, DateFormat('dd/MM/yyyy').format(selectedDay)))
               );
             });
           }

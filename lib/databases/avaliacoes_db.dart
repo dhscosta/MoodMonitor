@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,10 +9,10 @@ class SQLAvaliacoes {
     await database.execute("""CREATE TABLE avaliacoes(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         sincronizado INTEGER,
-        avaliacaoDia TEXT,
+        avaliacaoDia INTEGER,
         poucoDoDia TEXT,
         idUsuario INTEGER,
-        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        createdAt TEXT
       )
       """);
   }
@@ -24,7 +25,6 @@ class SQLAvaliacoes {
   static Future<void> sincronizarComFirebase() async {
     // Verificar a conexão antes de sincronizar
     if (await checkInternetConnection()) {
-
       final db = await SQLAvaliacoes.db();
 
       // Obter registros não sincronizados
@@ -53,7 +53,6 @@ class SQLAvaliacoes {
             .collection('avaliacoes')
             .add(registroModificavel);
       }
-
     }
   }
 
@@ -67,15 +66,15 @@ class SQLAvaliacoes {
     );
   }
 
-  static Future<int> adicionarAvaliacao(
-
-      String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+  static Future<int> adicionarAvaliacao(int avaliacaoDia, String poucoDoDia,
+      int idUsuario, DateTime criacao) async {
     final db = await SQLAvaliacoes.db();
 
     final dados = {
       'avaliacaoDia': avaliacaoDia,
       'poucoDoDia': poucoDoDia,
       'idUsuario': idUsuario,
+      'createdAt': DateFormat('dd/MM/yyyy').format(criacao),
       'sincronizado': 0
     };
     final id = await db.insert('avaliacoes', dados,
@@ -96,21 +95,20 @@ class SQLAvaliacoes {
         .query('avaliacoes', where: "idUsuario = ?", whereArgs: [idUsuario]);
   }
 
-  static Future<List<Map<String, dynamic>>> recuperarAvaliacao(int id) async {
+  static Future<List<Map<String, dynamic>>> recuperarAvaliacao(
+      int idUsuario, String data) async {
     final db = await SQLAvaliacoes.db();
-    return db.query('avaliacoes', where: "id = ?", whereArgs: [id], limit: 1);
+    return db.query('avaliacoes',
+        where: "idUsuario = ? AND createdAt = ?",
+        whereArgs: [idUsuario, data],
+        limit: 1);
   }
 
   static Future<int> atualizarAvaliacao(
-      int id, String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+      int id, int avaliacaoDia, String poucoDoDia) async {
     final db = await SQLAvaliacoes.db();
 
-    final dados = {
-      'avaliacaoDia': avaliacaoDia,
-      'poucoDoDia': poucoDoDia,
-      'idUsuario': idUsuario,
-      'createdAt': DateTime.now().toString()
-    };
+    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia};
 
     final result =
         await db.update('avaliacoes', dados, where: "id = ?", whereArgs: [id]);
