@@ -29,8 +29,9 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   sqflite: ^2.3.0
-
+  font_awesome_flutter: ^9.1.0
   table_calendar: ^3.0.9
+  fl_chart: ^0.65.0
 
   flutter:
     sdk: flutter

@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLAvaliacoes {
   static Future<void> criaTabela(sql.Database database) async {
     await database.execute("""CREATE TABLE avaliacoes(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        avaliacaoDia TEXT,
+        avaliacaoDia INTEGER,
         poucoDoDia TEXT,
         idUsuario INTEGER,
-        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        createdAt TEXT
       )
       """);
   }
@@ -23,10 +24,10 @@ class SQLAvaliacoes {
     );
   }
 
-  static Future<int> adicionarAvaliacao(String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+  static Future<int> adicionarAvaliacao(int avaliacaoDia, String poucoDoDia, int idUsuario, DateTime criacao) async {
     final db = await SQLAvaliacoes.db();
 
-    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario};
+    final dados = {'avaliacaoDia': avaliacaoDia, 'poucoDoDia': poucoDoDia, 'idUsuario': idUsuario, 'createdAt': DateFormat('dd/MM/yyyy').format(criacao)};
     final id = await db.insert('avaliacoes', dados,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return id;
@@ -42,20 +43,18 @@ class SQLAvaliacoes {
     return db.query('avaliacoes', where: "idUsuario = ?", whereArgs: [idUsuario]);
   }
 
-  static Future<List<Map<String, dynamic>>> recuperarAvaliacao(int id) async {
+  static Future<List<Map<String, dynamic>>> recuperarAvaliacao(int idUsuario, String data) async {
     final db = await SQLAvaliacoes.db();
-    return db.query('avaliacoes', where: "id = ?", whereArgs: [id], limit: 1);
+    return db.query('avaliacoes', where: "idUsuario = ? AND createdAt = ?", whereArgs: [idUsuario, data], limit: 1);
   }
 
   static Future<int> atualizarAvaliacao(
-      int id, String avaliacaoDia, String poucoDoDia, int idUsuario) async {
+      int id, int avaliacaoDia, String poucoDoDia) async {
     final db = await SQLAvaliacoes.db();
 
     final dados = {
       'avaliacaoDia': avaliacaoDia,
-      'poucoDoDia': poucoDoDia,
-      'idUsuario': idUsuario,
-      'createdAt': DateTime.now().toString()
+      'poucoDoDia': poucoDoDia
     };
 
     final result =
