@@ -56,6 +56,38 @@ class SQLAvaliacoes {
     }
   }
 
+  static Future<void> sincronizarAvaliacoesPorUsuario(int idUsuario) async {
+    if (await checkInternetConnection()) {
+      final db = await SQLAvaliacoes.db();
+
+      // Buscar no Firebase as avaliações do usuário
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('avaliacoes')
+          .where('idUsuario', isEqualTo: idUsuario)
+          .get();
+
+      final avaliacoesFirebase = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      // Verificar se as avaliações já existem no banco de dados local
+      for (var avaliacaoFirebase in avaliacoesFirebase) {
+        final exists = await db.query('avaliacoes',
+            where: "idUsuario = ? AND avaliacaoDia = ? AND poucoDoDia = ?",
+            whereArgs: [
+              idUsuario,
+              avaliacaoFirebase['avaliacaoDia'],
+              avaliacaoFirebase['poucoDoDia'],
+            ]);
+
+        if (exists.isEmpty) {
+          // Avaliação não existe localmente, salvar no banco de dados local
+          await adicionarAvaliacao(avaliacaoFirebase['avaliacaoDia'], avaliacaoFirebase['poucoDoDia'], avaliacaoFirebase['idUsuario'], avaliacaoFirebase['criacao']);
+        }
+      }
+    }
+  }
+
   static Future<sql.Database> db() async {
     return sql.openDatabase(
       'avaliacoes.db',

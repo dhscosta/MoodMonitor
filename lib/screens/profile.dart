@@ -42,6 +42,7 @@ class _ProfileState extends State<Profile> {
       _ansioso = 0;
       _bravo = 0;
 
+      await SQLAvaliacoes.sincronizarAvaliacoesPorUsuario(widget.id);
       List<Map<String, dynamic>> requisicao = await SQLAvaliacoes.recuperarAvaliacoesDoUsuario(widget.id);
 
       requisicao.forEach((elemento) {

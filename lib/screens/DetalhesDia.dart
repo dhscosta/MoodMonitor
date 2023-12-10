@@ -81,6 +81,7 @@ class _DetalhesDia extends State<DetalhesDia>{
   }
 
   Future<Widget> tela() async{
+    await SQLAvaliacoes.sincronizarAvaliacoesPorUsuario(widget.id);
     avaliacao = await consultaAvaliacao();
     return Center(
       child: SingleChildScrollView(

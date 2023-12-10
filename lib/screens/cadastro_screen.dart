@@ -261,7 +261,7 @@ class CadastroScreen extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  email = value;
+                  dataNascimento = value;
                 },
               ),
 
