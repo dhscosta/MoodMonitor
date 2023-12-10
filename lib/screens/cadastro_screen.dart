@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'Home.dart';
 import 'sobre_screen.dart';
 import 'package:moodmonitor/databases/usuario_db.dart';
@@ -17,6 +18,7 @@ class LoginPage extends StatelessWidget {
   int id;
 
   LoginPage(this.id, {super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,30 +74,14 @@ class LoginPage extends StatelessWidget {
                       await SQLUsuarios.validaUsuario(
                           usu['celEmail'], usu['senha']);
                       var id = usu['id'];
-                      print("QUE SACO"+id);
+                      print("QUE SACO" + id);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Home(id)),
                       );
                     } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('ERRO!'),
-                            content:
-                                const Text('Não foi possivel fazer o login.'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      _erroLogin(context,
+                          "Erro ao fazer login. Verifique suas credenciais.");
                     }
                   } else {
                     final idDoUsuario = usuarios.first['id'];
@@ -184,6 +170,15 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+  void _erroLogin(BuildContext context, String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 }
 
 class CadastroScreen extends StatelessWidget {
@@ -191,14 +186,22 @@ class CadastroScreen extends StatelessWidget {
   String email = "";
   String senha = "";
   String dataNascimento = "";
-  String? genero = "";
+  String? genero = "Indefinido";
 
   int id;
+
+  List<String> generos = ['Masculino', 'Feminino', 'Outro', 'Indefinido'];
+
+  TextEditingController _controller = TextEditingController();
+  final MaskTextInputFormatter _maskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
 
   CadastroScreen(this.id, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  StatefulWidget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tela de Cadastro'),
@@ -209,6 +212,7 @@ class CadastroScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+
               //nome
               TextField(
                 decoration: const InputDecoration(
@@ -219,6 +223,7 @@ class CadastroScreen extends StatelessWidget {
                   nome = value;
                 },
               ),
+
               const SizedBox(height: 16.0),
               //email
               TextField(
@@ -230,8 +235,9 @@ class CadastroScreen extends StatelessWidget {
                   email = value;
                 },
               ),
+              
               const SizedBox(height: 16.0),
-              //email
+              //Senha
               TextField(
                 obscureText: true,
                 decoration: const InputDecoration(
@@ -242,49 +248,45 @@ class CadastroScreen extends StatelessWidget {
                   senha = value;
                 },
               ),
+
               const SizedBox(height: 16.0),
               //data de nascimento
-              const Text(
-                'Data de Nascimento',
-                style: TextStyle(fontSize: 18),
-              ),
-              TextField(
-                decoration: const InputDecoration(
+              TextFormField(
+                controller: _controller,
+                keyboardType: TextInputType.datetime,
+                inputFormatters: [_maskFormatter],
+                decoration: InputDecoration(
+                  labelText: 'Data de Nascimento',
+                  hintText: 'DD/MM/YYYY',
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  dataNascimento = value;
+                  email = value;
                 },
               ),
+
               const SizedBox(height: 16.0),
               //escolha de genero
-              const Text(
-                'Gênero',
-                style: TextStyle(fontSize: 18),
-              ),
-              DropdownButton<String>(
-                value: null, // Valor inicial (implementar depois)
-                onChanged: (value) {
-                  genero =
-                      value; // Funcionalidade para quando selecionar (implementar depois)
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(labelText: 'Gênero'),
+                value: genero,
+                onChanged: (novoGenero) {
+                  genero = novoGenero;
                 },
-                items: <String>[
-                  'Masculino',
-                  'Feminino',
-                  'Outro',
-                ].map<DropdownMenuItem<String>>((String value) {
+                items: generos.map((genero) {
                   return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+                    value: genero,
+                    child: Text(genero),
                   );
                 }).toList(),
               ),
+
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   _adicionarUsuario(nome, senha, email, dataNascimento, genero);
 
-                  print("$nome $senha");
+                  print("$nome $senha $email $dataNascimento $genero");
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LoginPage(id)));
                 },
